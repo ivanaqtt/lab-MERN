@@ -1,0 +1,29 @@
+// Step 1: Examine query performance without indexes
+db.products.find({ category: "Electronics" }).explain("executionStats")
+
+// Step 2: Create a single-field index on 'category'
+db.products.createIndex({ category: 1 })
+
+// Step 3: Re-execute the same query with explain()
+db.products.find({ category: "Electronics" }).explain("executionStats")
+
+// Step 4: Create a compound index on 'category' and 'price'
+db.products.createIndex({ category: 1, price: 1 })
+
+// Step 5: Execute a filter query on both 'category' and 'price'
+db.products.find({ category: "Electronics", price: { $gt: 500 } }).explain("executionStats")
+
+// Step 6: Create a multi-key index on 'tags' (array field)
+db.products.createIndex({ tags: 1 })
+
+// Step 7: Query filtering on 'tags' array field
+db.products.find({ tags: "new" }).explain("executionStats")
+
+// Step 8: List all indexes on the collection
+db.products.getIndexes()
+
+// Drop specific index on 'category'
+db.products.dropIndex("category_1")
+
+// Drop all indexes except default _id
+db.products.dropIndexes()
